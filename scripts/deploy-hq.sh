@@ -24,7 +24,8 @@ echo "[2/6] ensure graphify installed on HQ (uv venv)…"
 ssh "$HQ" 'set -e; cd ~/projects/agent-memory-graph;
   command -v uv >/dev/null || curl -LsSf https://astral.sh/uv/install.sh | sh;
   ~/.local/bin/uv venv -q .venv 2>/dev/null || true;
-  ~/.local/bin/uv pip install -q --python .venv -e . pyyaml'
+  # [mcp] extra pulls mcp+starlette; uvicorn is needed by serve.py but not declared, so add it.
+  ~/.local/bin/uv pip install -q --python .venv -e ".[mcp]" uvicorn pyyaml'
 
 echo "[3/6] sync graph artifacts desktop -> HQ…"
 ssh "$HQ" 'mkdir -p ~/.cache/agent-memory-graph/corpus/graphify-out'

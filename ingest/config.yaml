@@ -1,0 +1,45 @@
+# Agent Memory Graph — ingestion config
+# Source paths and per-source defaults. No secrets here.
+# Consumed by ingest/run.py. See Nico card 33.
+
+corpus_dir: build/corpus          # staging dir graphify extract runs over
+manifest: build/corpus/manifest.json
+excluded_log: build/excluded.log  # records dropped by sanitizer (no content, just reason)
+
+sources:
+  agent_core:
+    enabled: true
+    root: ~/.agent-core
+    include: ["CORE", "NODES", "PLAYBOOKS"]
+    glob: "**/*.md"
+    default_permission: L1        # constitutional / shareable
+  vault:
+    enabled: true
+    root: ~/Documents/ObsidianVault
+    include: ["01_IDENTITY", "02_PROJECTS", "03_KNOWLEDGE", "04_OPERATIONS"]
+    glob: "**/*.md"
+    skip_globs:                   # never ingest generated / policy regions
+      - "00_SYSTEM/**"
+      - "**/*.canvas"
+      - "**/*.base"
+    default_permission: L1
+    # honor frontmatter sensitivity/permission_level when present
+  nico:
+    enabled: true
+    base_url: http://100.85.55.57:8080
+    base_name: commander_ops
+    tables: ["Cards", "Projects", "Infra Registry", "Notes Index", "Decisions", "Lessons"]
+    exclude_tables: ["Approvals", "Agent Sessions"]   # never graph approval/secret tables
+    default_permission: L2
+    # token read from /home/oker/.hermes/.env (NICO_NOCODB_API_TOKEN) at runtime, never stored
+  agent_memory:
+    enabled: true
+    roots:
+      - ~/.claude/projects/-home-oker/memory
+    glob: "**/*.md"
+    default_permission: L2        # episodic; heaviest redaction
+    skip_files: ["MEMORY.md"]     # index only; per-topic files carry the content
+
+# Permission ladder (mirrors Nico L0-L6). Anything tagged >= drop_at is excluded entirely.
+permission_order: [L0, L1, L2, L3, L4, L5, L6]
+drop_at: L4                       # L4/L5/L6 never enter the graph

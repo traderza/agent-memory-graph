@@ -1,0 +1,17 @@
+[Unit]
+Description=Agent Memory Graph — graphify MCP server (HTTP, Tailscale-only, API-key gated)
+After=network-online.target
+
+[Service]
+Type=simple
+# Env file holds GRAPHIFY_API_KEY (not in git). Installed by deploy-hq.sh.
+EnvironmentFile=%h/.config/agent-memory-graph/env
+WorkingDirectory=%h/projects/agent-memory-graph
+ExecStart=%h/projects/agent-memory-graph/.venv/bin/python -m graphify.serve \
+  %h/.cache/agent-memory-graph/corpus/graphify-out/graph.json \
+  --transport http --host 100.85.55.57 --port 8770 --path /mcp --api-key ${GRAPHIFY_API_KEY}
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=default.target

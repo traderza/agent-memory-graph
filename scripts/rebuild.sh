@@ -33,5 +33,12 @@ GRAPHIFY_BACKEND="${GRAPHIFY_BACKEND:-claude-cli}" "$REPO/build.sh" >> "$LOG" 2>
 echo "$NEW_HASH" > "$STAMP"
 echo "[$(ts)] rebuild done" >> "$LOG"
 
-# 3. if HQ deploy exists, refresh its artifacts (no-op until the L5 deploy lands)
-if [ -d "$HOME/services/agent-memory-graph" ] 2>/dev/null; then :; fi
+# 3. if HQ deploy is live, push refreshed artifacts so the served graph stays current.
+#    Marker file is created by deploy-hq.sh; absent until the L5 deploy lands.
+if [ -f "$CACHE/.hq-deployed" ]; then
+    HQ="${HQ_SSH:-hq}"
+    rsync -az "$CORPUS/graphify-out/" "$HQ:~/.cache/agent-memory-graph/corpus/graphify-out/" >> "$LOG" 2>&1 || true
+    rsync -az "$CACHE/manifest.json" "$HQ:~/.cache/agent-memory-graph/manifest.json" >> "$LOG" 2>&1 || true
+    # graphify MCP hot-reloads graph.json inside tool handlers; no restart needed.
+    echo "[$(ts)] synced artifacts to HQ" >> "$LOG"
+fi

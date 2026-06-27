@@ -1,0 +1,13 @@
+[Unit]
+Description=Agent Memory Graph — static graph.html dashboard (Tailscale-only)
+After=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=%h/.cache/agent-memory-graph/corpus/graphify-out
+ExecStart=/usr/bin/python3 -m http.server 3310 --bind 100.85.55.57
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=default.target

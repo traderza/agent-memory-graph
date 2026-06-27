@@ -6,8 +6,8 @@ stage-2 ClearanceFilter so a caller only sees nodes at or below its clearance. U
   - the Phase 3 verification harness (prove low callers don't see high nodes), and
   - the engine behind the Phase 4 Telegram `/mem` command.
 
-    python -m mcp.query "what links finance-slip-api to MangoStickBot" --as claude
-    python -m mcp.query "homelab nodes" --as public --json
+    python -m amg.query "what links finance-slip-api to MangoStickBot" --as claude
+    python -m amg.query "homelab nodes" --as public --json
 
 graphify's own MCP server (`graphify-mcp`) is the production transport; this module is
 the deterministic, importable core so the same filter logic is testable and reusable.
@@ -22,7 +22,7 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-from mcp.filter import ClearanceFilter, caller_clearance  # noqa: E402
+from amg.filter import ClearanceFilter, caller_clearance  # noqa: E402
 
 CACHE = Path(os.path.expanduser("~/.cache/agent-memory-graph"))
 GRAPH = CACHE / "corpus" / "graphify-out" / "graph.json"

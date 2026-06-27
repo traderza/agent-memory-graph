@@ -27,7 +27,7 @@ uv venv .venv && uv pip install --python .venv pyyaml pytest
    anything ≥ `drop_at` (L4) dropped entirely → `build/excluded.log` (reason, no content).
    Fail-closed: a residual-secret match drops the whole record. Levels are normalized,
    so Nico labels like `"L5 PRODUCTION OPS"` gate the same as bare `L5`.
-2. **Soft filter at query** (Phase 3, `mcp/filter.py` — TODO): the MCP wrapper maps each
+2. **Soft filter at query** (Phase 3, `amg/filter.py` — TODO): the MCP wrapper maps each
    returned node back to its corpus file via **`build/corpus/manifest.json`** and drops
    nodes above the asking agent's clearance.
 

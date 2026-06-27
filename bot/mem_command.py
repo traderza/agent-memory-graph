@@ -19,7 +19,7 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-from mcp.query import query  # noqa: E402
+from amg.query import query  # noqa: E402
 
 HTML_BASE = os.getenv("AMG_HTML_URL", "http://100.85.55.57:3310/graph.html")
 MAX_CITES = 6

@@ -19,7 +19,7 @@ Built with **graphify** (fork `traderza/agent-memory-graph`). Permission-gated b
 Nico **L0–L6** model, two stages:
 - **Ingest gate** (`ingest/sanitize.py`): secrets redacted, L4+ dropped — they never
   reach the graph.
-- **Query gate** (`mcp/filter.py`): each caller sees only nodes at/below its clearance.
+- **Query gate** (`amg/filter.py`): each caller sees only nodes at/below its clearance.
 
 ## Build
 
@@ -34,7 +34,7 @@ Backend is `claude-cli` (Claude subscription, no API key, no OpenAI cost).
 
 ## Query (agile, any device)
 
-- Local / in-session: `python -m mcp.query "<question>" --as <agent>`
+- Local / in-session: `python -m amg.query "<question>" --as <agent>`
 - Live MCP: agents point at `graphify-mcp` on **hq:8770** (Infra Registry #48).
 - Browse: `graph.html` on **hq:3310** (Infra Registry #49), desktop + phone.
 - Mobile chat: Telegram `/mem <question>` (Phase 4) → Claude/Hermes answers grounded in

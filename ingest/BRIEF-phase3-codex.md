@@ -18,7 +18,7 @@ Pick backend by what HQ has. `graphify extract` is offline for code; our corpus 
 markdown/docs so it needs an LLM backend — prefer the `claude` CLI binary (subscription,
 no key) per graphify README, else `delegate`/LiteLLM `ANTHROPIC_API_KEY`.
 
-### 2. `mcp/filter.py` — stage-2 clearance filter (the real custom work)
+### 2. `amg/filter.py` — stage-2 clearance filter (the real custom work)
 Wrap the graphify MCP tools (`query_graph`, `get_node`, `get_neighbors`,
 `get_community`, `shortest_path`, `god_nodes` — see `graphify/serve.py` ~L713) so every
 returned node is checked against the caller's clearance:

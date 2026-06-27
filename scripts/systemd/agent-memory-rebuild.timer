@@ -1,0 +1,11 @@
+[Unit]
+Description=Nightly trigger for the Agent Memory Graph rebuild
+
+[Timer]
+# 03:30 local, with jitter; catch up if the machine was asleep at the scheduled time.
+OnCalendar=*-*-* 03:30:00
+RandomizedDelaySec=900
+Persistent=true
+
+[Install]
+WantedBy=timers.target

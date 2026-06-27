@@ -41,10 +41,17 @@ def _call(base: str, token: str, path: str):
         return json.load(r)
 
 
+# Volatile fields that change without semantic meaning — excluded so the corpus is
+# stable run-to-run (the rebuild change-guard would otherwise fire every night because
+# of auto-probe timestamps and UpdatedAt churn).
+_VOLATILE_FIELDS = {"CreatedAt", "UpdatedAt", "last_verified_at", "last_probed_at",
+                    "updated_at", "created_at"}
+
+
 def _row_to_md(table: str, row: dict) -> str:
     lines = [f"# {table} row {row.get('Id', '?')}", ""]
     for k, v in row.items():
-        if v in (None, "", [], {}):
+        if k in _VOLATILE_FIELDS or v in (None, "", [], {}):
             continue
         lines.append(f"- **{k}**: {v}")
     return "\n".join(lines)

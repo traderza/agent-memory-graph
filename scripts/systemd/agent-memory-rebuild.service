@@ -1,0 +1,9 @@
+[Unit]
+Description=Agent Memory Graph — nightly rebuild (stage + change-guarded graphify extract)
+After=network-online.target
+
+[Service]
+Type=oneshot
+# %h = the user's home; repo is expected at ~/projects/agent-memory-graph on the build node.
+ExecStart=%h/projects/agent-memory-graph/scripts/rebuild.sh
+Nice=10

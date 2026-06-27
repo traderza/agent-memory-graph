@@ -10,8 +10,8 @@ def _res(visible, hidden, clearance="L1"):
 
 
 def test_empty_result_message():
-    out = _format(_res([], 0))
-    assert "No matching memory" in out and "clearance" in out
+    out = _format(_res([], 0, clearance="L1"))
+    assert "No matching memory" in out and "L1" in out
 
 
 def test_renders_citations_and_hidden_count():

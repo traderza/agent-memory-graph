@@ -15,6 +15,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import sys
 from pathlib import Path
 
@@ -48,8 +49,15 @@ def main(argv: list[str] | None = None) -> int:
 
     cfg = _load_config(Path(args.config))
     repo_root = Path(__file__).resolve().parents[1]
-    corpus = repo_root / cfg.get("corpus_dir", "build/corpus")
-    excluded_log = repo_root / cfg.get("excluded_log", "build/excluded.log")
+
+    def _resolve(p: str, default: str) -> Path:
+        # Honor ~ and absolute paths; otherwise resolve relative to the repo root.
+        raw = Path(os.path.expanduser(p or default))
+        return raw if raw.is_absolute() else (repo_root / raw)
+
+    corpus = _resolve(cfg.get("corpus_dir"), "build/corpus")
+    excluded_log = _resolve(cfg.get("excluded_log"), "build/excluded.log")
+    manifest_path = _resolve(cfg.get("manifest"), str(corpus / "manifest.json"))
     drop_at = cfg.get("drop_at", "L4")
 
     manifest: dict[str, dict] = {}
@@ -77,12 +85,13 @@ def main(argv: list[str] | None = None) -> int:
 
     if not args.dry_run:
         corpus.mkdir(parents=True, exist_ok=True)
-        (corpus / "manifest.json").write_text(json.dumps(manifest, indent=2))
+        manifest_path.parent.mkdir(parents=True, exist_ok=True)
+        manifest_path.write_text(json.dumps(manifest, indent=2))
         excluded_log.parent.mkdir(parents=True, exist_ok=True)
         excluded_log.write_text("\n".join(excluded) + ("\n" if excluded else ""))
 
     print(json.dumps(stats, indent=2))
-    print(f"corpus: {corpus}  manifest: {len(manifest)} docs  excluded: {len(excluded)}")
+    print(f"corpus: {corpus}  manifest: {manifest_path} ({len(manifest)} docs)  excluded: {len(excluded)}")
     return 0
 
 

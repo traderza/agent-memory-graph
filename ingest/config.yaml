@@ -2,9 +2,13 @@
 # Source paths and per-source defaults. No secrets here.
 # Consumed by ingest/run.py. See Nico card 33.
 
-corpus_dir: build/corpus          # staging dir graphify extract runs over
-manifest: build/corpus/manifest.json
-excluded_log: build/excluded.log  # records dropped by sanitizer (no content, just reason)
+# Corpus lives OUTSIDE the repo tree: graphify honors .gitignore, so a corpus under
+# a gitignored repo dir would be silently skipped. A cache dir sidesteps that and keeps
+# generated data out of git. Absolute or ~-paths are honored as-is by run.py.
+corpus_dir: ~/.cache/agent-memory-graph/corpus   # staging dir graphify extract runs over
+# manifest + log live ONE LEVEL ABOVE the corpus so graphify does not ingest them as docs.
+manifest: ~/.cache/agent-memory-graph/manifest.json
+excluded_log: ~/.cache/agent-memory-graph/excluded.log  # dropped records (reason only)
 
 sources:
   agent_core:
